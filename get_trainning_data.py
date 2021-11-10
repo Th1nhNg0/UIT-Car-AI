@@ -75,7 +75,7 @@ try:
             print(len(training_data))
             if len(training_data) >= SAVE_CHECKPOINT:
                 np.save(file_name, training_data)
-                print('SAVED')
+                print('SAVED file index:',starting_value)
                 training_data = []
                 starting_value += 1
                 file_name = filepath.format(starting_value)

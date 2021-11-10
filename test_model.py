@@ -4,7 +4,7 @@ import sys
 import time
 import cv2
 import numpy as np
-from alexnet import alexnet
+from alexnet import alexnet2
 
 # Create a socket object
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,10 +15,10 @@ port = 54321
 # connect to the server on local computer
 s.connect(('127.0.0.1', port))
 
-WIDTH = 160
-HEIGHT = 45
-model = alexnet(WIDTH, HEIGHT, 1e-3)
-MODEL_NAME = 'car-model'
+WIDTH = 320
+HEIGHT = 90
+model = alexnet2(WIDTH, HEIGHT, 1e-3)
+MODEL_NAME = 'model/car-model'
 model.load(MODEL_NAME)
 
 pre = time.time()
@@ -31,7 +31,11 @@ sendBack_Speed = 0
 try:
     while True:
         # Send data
-        message = bytes(f"{sendBack_angle} {sendBack_Speed}", "utf-8")
+        message_getState = bytes("0", "utf-8")
+        s.sendall(message_getState)
+        state_date = s.recv(100)
+        current_speed, current_angle = state_date.decode("utf-8").split(' ')
+        message = bytes(f"1 {sendBack_angle} {sendBack_Speed}", "utf-8")
         s.sendall(message)
         data = s.recv(100000)
         image = cv2.imdecode(np.frombuffer(data, np.uint8), -1)
@@ -54,7 +58,12 @@ try:
         mode_choice = np.argmax(prediction)
         sendBack_angle = mode_choice-25
         sendBack_Speed = 35
-        #print(sendBack_angle)3
+        #print(sendBack_angle,prediction[mode_choice])
+        print(prediction)
+        cv2.imshow('window', image)
+        if cv2.waitKey(25) & 0xFF == ord('q'):
+            cv2.destroyAllWindows()
+            break
 
 
 finally:

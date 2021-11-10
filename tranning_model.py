@@ -9,9 +9,9 @@ HEIGHT = 90
 model = alexnet(WIDTH, HEIGHT, 1e-3)
 MODEL_NAME = 'model/car-model'
 LOAD_MODEL = False
-EPOCHS = 10
-filepath = "data/training_data-{}.npy"
-train_data_file_count = 5
+EPOCHS = 5
+filepath = "data/training_data_balanced-{}.npy"
+train_data_file_count = 19
 
 if LOAD_MODEL:
     model.load(MODEL_NAME)
@@ -26,8 +26,8 @@ for i in range(EPOCHS):
         file_name = filepath.format(i)
         training_data = np.load(file_name, allow_pickle=True)
         print('training_data-{}.npy'.format(i), len(training_data))
-        train = training_data[:-int(len(training_data)*0.25)]
-        test = training_data[-int(len(training_data)*0.25):]
+        train = training_data[:-int(len(training_data)*0.2)]
+        test = training_data[-int(len(training_data)*0.2):]
 
         X = np.array([i[0] for i in train]).reshape(-1, WIDTH, HEIGHT, 1)
         Y = [[0 if j != i[1] else 1 for j in range(-25, 26)] for i in train]
