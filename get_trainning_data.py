@@ -16,22 +16,19 @@ port = 54321
 s.connect(('127.0.0.1', port))
 pre = time.time()
 
-
 # Thay đổi các biến sau
 
 MAX_ANGLE = 25  # góc bẻ lái tối đa từ 0 tới 25
-angle_decrease_ratio=0.15 # tốc độ giảm về 0 của góc lái, 0.05 = giảm 5% theo thời gian
+angle_decrease_ratio = 0.15  # tốc độ giảm về 0 của góc lái, 0.05 = giảm 5% theo thời gian
 STABLE_SPEED = 30  # tốc độ mặc định
-SAVE_CHECKPOINT = 1000 # mỗi 1000 dữ liệu ( ảnh + góc lái ) sẽ tự động lưu vào file, máy yếu lúc lưu có thể mất điều khiển xe
-filepath = "data/training_data-{}.npy"
-
+SAVE_CHECKPOINT = 1000  # mỗi 1000 dữ liệu ( ảnh + góc lái ) sẽ tự động lưu vào file, máy yếu lúc lưu có thể mất điều khiển xe
+filepath = "data/training_data-{}.npy"  # lưu ý phải có {} để đánh số
 
 # không cần quan tâm  biến này
 WIDTH = 160
 HEIGHT = 60
 sendBack_angle = 0
 sendBack_Speed = 0
-
 
 # file data
 training_data = []
@@ -46,7 +43,7 @@ while True:
         break
 # đếm ngược
 for i in list(range(2))[::-1]:
-    print(i+1)
+    print(i + 1)
     time.sleep(1)
 print("START COLLET DATA")
 
@@ -60,26 +57,22 @@ try:
         s.sendall(message)
         data = s.recv(100000)
         image = cv2.imdecode(np.frombuffer(data, np.uint8), -1)
-        cropimg = image[round(image.shape[0]/3):, :]
-        # cropimg = cv2.cvtColor(cropimg, cv2.COLOR_RGB2YUV)
-        cropimg = cv2.cvtColor(cropimg, cv2.COLOR_BGR2GRAY)
-        # cropimg = cv2.GaussianBlur(cropimg,(5,5),0)
+        image = image[round(image.shape[0] / 3):, :]
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         # bỏ comment phần này để xem hình ảnh mà xe thấy
-        # cv2.imshow('window', cropimg)
+        # cv2.imshow('window', image)
         # if cv2.waitKey(25) & 0xFF == ord('q'):
         #     cv2.destroyAllWindows()
         #     break
+        image = cv2.resize(image, (WIDTH, HEIGHT))
 
-        cropimg = cv2.resize(cropimg, (WIDTH,HEIGHT))
-        #cropimg = cropimg / 255
-
-        training_data.append([cropimg, round(float(current_angle))])
+        training_data.append([image, round(float(current_angle))])
         if len(training_data) % 100 == 0:
             print(len(training_data))
             if len(training_data) >= SAVE_CHECKPOINT:
                 np.save(file_name, training_data)
-                print('SAVED file index:',starting_value)
+                print('SAVED file index:', starting_value)
                 training_data = []
                 starting_value += 1
                 file_name = filepath.format(starting_value)

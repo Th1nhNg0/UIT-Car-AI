@@ -14,7 +14,7 @@ from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.estimator import regression
 from tflearn.layers.normalization import local_response_normalization
 from tflearn.layers.merge_ops import merge
-
+# Ảnh grayscale
 def alexnet(width, height, lr):
     network = input_data(shape=[None, width, height, 1], name='input')
     network = conv_2d(network, 96, 11, strides=4, activation='relu')
@@ -41,7 +41,7 @@ def alexnet(width, height, lr):
                         max_checkpoints=1, tensorboard_verbose=0, tensorboard_dir='log')
 
     return model
-
+# Ảnh grayscale
 def alexnet2(width, height, lr, output=51):
     network = input_data(shape=[None, width, height, 1], name='input')
     network = conv_2d(network, 96, 11, strides=4, activation='relu')
@@ -81,6 +81,7 @@ def alexnet2(width, height, lr, output=51):
     return model
 
 
+# Ảnh có màu
 def otherception3(width, height, frame_count, lr, output=9, model_name='otherception.model', device='gpu', num='0'):
     network = input_data(shape=[None, width, height, 3], name='input')
     conv1_7_7 = conv_2d(network, 64, 28, strides=4, activation='relu', name='conv1_7_7_s2')

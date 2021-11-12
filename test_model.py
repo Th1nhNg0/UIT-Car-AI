@@ -17,9 +17,13 @@ s.connect(('127.0.0.1', port))
 
 WIDTH = 160
 HEIGHT = 60
+
+## edit các biến sau:
 model = alexnet2(WIDTH, HEIGHT, 1e-3)
 MODEL_NAME = 'model/car-colab-v0.4.model'
 model.load(MODEL_NAME)
+
+
 
 pre = time.time()
 sendBack_angle = 0
