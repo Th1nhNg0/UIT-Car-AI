@@ -2,9 +2,3 @@ model/
 data/
 map/
 log/
-__pycache__/
-.idea/
-
-
-model_*
-checkpoint
