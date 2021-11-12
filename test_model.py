@@ -4,7 +4,7 @@ import sys
 import time
 import cv2
 import numpy as np
-from model import alexnet2
+from model import alexnet
 
 # Create a socket object
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,7 +19,7 @@ WIDTH = 160
 HEIGHT = 60
 
 ## edit các biến sau:
-model = alexnet2(WIDTH, HEIGHT, 1e-3)
+model = alexnet(WIDTH, HEIGHT, 1e-3)
 MODEL_NAME = 'model/car-v0.model'
 model.load(MODEL_NAME)
 
