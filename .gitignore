@@ -2,6 +2,7 @@ model/
 data/
 map/
 log/
+.idea/
 
 checkpoint
 model_*
