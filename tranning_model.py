@@ -11,7 +11,7 @@ HEIGHT = 60
 DATA_PATH = "data/training_data_set.npy"
 MODEL_NAME = 'model/car-v0.model'
 model = alexnet(WIDTH, HEIGHT, 1e-3)
-EPOCHS = 10  # số lần train
+EPOCHS = 2  # số lần train
 test_percent = 0.2  # phần trăm tách ra từ training data để làm test data
 
 LOAD_MODEL = False  # True nếu load model cũ để train tiếp

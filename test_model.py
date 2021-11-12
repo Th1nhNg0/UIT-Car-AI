@@ -20,7 +20,7 @@ HEIGHT = 60
 
 ## edit các biến sau:
 model = alexnet2(WIDTH, HEIGHT, 1e-3)
-MODEL_NAME = 'model/car-colab-v0.4.model'
+MODEL_NAME = 'model/car-v0.model'
 model.load(MODEL_NAME)
 
 
@@ -59,10 +59,11 @@ try:
 
         prediction = model.predict([image.reshape(WIDTH, HEIGHT, 1)])[0]
         mode_choice = np.argmax(prediction)
-        if prediction[mode_choice]>0:
-            sendBack_angle = mode_choice - 25
-        else:
-            sendBack_angle= 0
+        # if prediction[mode_choice]>0.5:
+        #     sendBack_angle = mode_choice - 25
+        # else:
+        #     sendBack_angle = 0
+        sendBack_angle = mode_choice - 25
         sendBack_Speed = 30
         print(sendBack_angle, prediction[mode_choice])
         # print(prediction)
