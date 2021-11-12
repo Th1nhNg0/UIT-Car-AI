@@ -18,7 +18,7 @@
 
 Ví dụ sau khi hoàn thành thu thập dữ liệu:
 
-![Dữ liệu](readme_images/Screenshot 2021-11-12 154102.png)
+![data](readme_images/Screenshot 2021-11-12 154102.png)
 
 ## 2. Cân bằng data và đưa về 1 file:
 
