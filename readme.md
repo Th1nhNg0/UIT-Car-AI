@@ -12,7 +12,7 @@
 
 - Tạo folder data
 - Chạy map, chuyển sang chế độ autopilot
-- Chạy file `get_trainning_data.py`, dữ liệu sẽ được lưu vào folder data, tự động đánh số từ 1. Edit các biến trong code
+- Chạy file `get_trainning_data.py`, dữ liệu sẽ được lưu vào folder data, tự động đánh số từ 1. 
 - Bấm A hoặc D để quẹo trái phải, hiện tại tốc độ sẽ cố định (tìm cách tối ưu sau)
 - Bấm Q để dừng thu thập dữ liệu
 
