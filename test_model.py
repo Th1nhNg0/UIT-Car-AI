@@ -4,7 +4,7 @@ import sys
 import time
 import cv2
 import numpy as np
-from alexnet import alexnet2
+from model import alexnet2
 
 # Create a socket object
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,18 +15,15 @@ port = 54321
 # connect to the server on local computer
 s.connect(('127.0.0.1', port))
 
-WIDTH = 320
-HEIGHT = 90
+WIDTH = 160
+HEIGHT = 60
 model = alexnet2(WIDTH, HEIGHT, 1e-3)
-MODEL_NAME = 'model/car-model'
+MODEL_NAME = 'model/car-colab-v0.4.model'
 model.load(MODEL_NAME)
 
 pre = time.time()
 sendBack_angle = 0
 sendBack_Speed = 0
-
-
-
 
 try:
     while True:
@@ -51,15 +48,20 @@ try:
         """
 
         # your process here
+        image = image[round(image.shape[0] / 3):, :]
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        image = image[image.shape[0] // 2:, :]
+        # image = cv2.GaussianBlur(image, (5, 5), 0)
         image = cv2.resize(image, (WIDTH, HEIGHT))
-        prediction = model.predict([image.reshape(WIDTH,HEIGHT,1)])[0]
+
+        prediction = model.predict([image.reshape(WIDTH, HEIGHT, 1)])[0]
         mode_choice = np.argmax(prediction)
-        sendBack_angle = mode_choice-25
-        sendBack_Speed = 35
-        #print(sendBack_angle,prediction[mode_choice])
-        print(prediction)
+        if prediction[mode_choice]>0:
+            sendBack_angle = mode_choice - 25
+        else:
+            sendBack_angle= 0
+        sendBack_Speed = 30
+        print(sendBack_angle, prediction[mode_choice])
+        # print(prediction)
         cv2.imshow('window', image)
         if cv2.waitKey(25) & 0xFF == ord('q'):
             cv2.destroyAllWindows()

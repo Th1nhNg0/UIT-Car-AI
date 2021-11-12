@@ -19,16 +19,16 @@ pre = time.time()
 
 # Thay đổi các biến sau
 
-MAX_ANGLE = 20  # góc bẻ lái tối đa từ 0 tới 25
-angle_decrease_ratio=0.9 # tốc độ giảm về 0 của góc lái, 0.95 = giảm 5% theo thời gian
+MAX_ANGLE = 25  # góc bẻ lái tối đa từ 0 tới 25
+angle_decrease_ratio=0.15 # tốc độ giảm về 0 của góc lái, 0.05 = giảm 5% theo thời gian
 STABLE_SPEED = 30  # tốc độ mặc định
 SAVE_CHECKPOINT = 1000 # mỗi 1000 dữ liệu ( ảnh + góc lái ) sẽ tự động lưu vào file, máy yếu lúc lưu có thể mất điều khiển xe
 filepath = "data/training_data-{}.npy"
 
 
 # không cần quan tâm  biến này
-WIDTH = 320
-HEIGHT = 90
+WIDTH = 160
+HEIGHT = 60
 sendBack_angle = 0
 sendBack_Speed = 0
 
@@ -45,7 +45,7 @@ while True:
         print('File does not exist, starting fresh!', starting_value)
         break
 # đếm ngược
-for i in list(range(4))[::-1]:
+for i in list(range(2))[::-1]:
     print(i+1)
     time.sleep(1)
 print("START COLLET DATA")
@@ -56,19 +56,23 @@ try:
         s.sendall(message_getState)
         state_date = s.recv(100)
         current_speed, current_angle = state_date.decode("utf-8").split(' ')
-        message = bytes(f"1 {sendBack_angle} {sendBack_Speed}", "utf-8")
+        message = bytes(f"1 {round(sendBack_angle)} {round(sendBack_Speed)}", "utf-8")
         s.sendall(message)
         data = s.recv(100000)
         image = cv2.imdecode(np.frombuffer(data, np.uint8), -1)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        cropimg = image[image.shape[0]//2:, :]
-        cropimg = cv2.resize(cropimg, (WIDTH,HEIGHT))
+        cropimg = image[round(image.shape[0]/3):, :]
+        # cropimg = cv2.cvtColor(cropimg, cv2.COLOR_RGB2YUV)
+        cropimg = cv2.cvtColor(cropimg, cv2.COLOR_BGR2GRAY)
+        # cropimg = cv2.GaussianBlur(cropimg,(5,5),0)
 
         # bỏ comment phần này để xem hình ảnh mà xe thấy
-        cv2.imshow('window', cropimg)
-        if cv2.waitKey(25) & 0xFF == ord('q'):
-            cv2.destroyAllWindows()
-            break
+        # cv2.imshow('window', cropimg)
+        # if cv2.waitKey(25) & 0xFF == ord('q'):
+        #     cv2.destroyAllWindows()
+        #     break
+
+        cropimg = cv2.resize(cropimg, (WIDTH,HEIGHT))
+        #cropimg = cropimg / 255
 
         training_data.append([cropimg, round(float(current_angle))])
         if len(training_data) % 100 == 0:
@@ -86,7 +90,7 @@ try:
         elif keyboard.is_pressed('d'):
             sendBack_angle += 1
         else:
-            sendBack_angle = sendBack_angle * angle_decrease_ratio
+            sendBack_angle = sendBack_angle - sendBack_angle * angle_decrease_ratio
         sendBack_Speed = STABLE_SPEED
         # if keyboard.is_pressed('w'):
         #     sendBack_Speed += 5

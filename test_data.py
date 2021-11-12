@@ -3,9 +3,9 @@ import cv2
 import time
 
 #load file
-training_data = np.load('training_data.npy',allow_pickle=True)
+training_data = np.load('data/training_data-1.npy',allow_pickle=True)
 t=0.001 # thời gian show giữa các ảnh
-index=2000 #_ vị trí của ảnh muốn xem, tự động tăng
+index=0 #_ vị trí của ảnh muốn xem, tự động tăng
 while True:
     image,output=training_data[index]
     image = cv2.resize(image, (160*3, 45*3))
