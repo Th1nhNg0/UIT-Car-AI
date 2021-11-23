@@ -9,10 +9,7 @@
       <excludeFolder url="file://$MODULE_DIR$/map" />
       <excludeFolder url="file://$MODULE_DIR$/model" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.9 (car) (2)" jdkType="Python SDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-  </component>
-  <component name="PackageRequirementsSettings">
-    <option name="versionSpecifier" value="Strong equality (==x.y.z)" />
   </component>
 </module>

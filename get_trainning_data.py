@@ -18,8 +18,8 @@ pre = time.time()
 
 # Thay đổi các biến sau
 
-MAX_ANGLE = 25  # góc bẻ lái tối đa từ 0 tới 25
-angle_decrease_ratio = 0.15  # tốc độ giảm về 0 của góc lái, 0.05 = giảm 5% theo thời gian
+MAX_ANGLE = 20  # góc bẻ lái tối đa từ 0 tới 25
+angle_decrease_ratio = 0.05  # tốc độ giảm về 0 của góc lái, 0.05 = giảm 5% theo thời gian
 STABLE_SPEED = 30  # tốc độ mặc định
 SAVE_CHECKPOINT = 1000  # mỗi 1000 dữ liệu ( ảnh + góc lái ) sẽ tự động lưu vào file, máy yếu lúc lưu có thể mất điều khiển xe
 filepath = "data/training_data-{}.npy"  # lưu ý phải có {} để đánh số
@@ -42,11 +42,17 @@ while True:
         print('File does not exist, starting fresh!', starting_value)
         break
 # đếm ngược
-for i in list(range(2))[::-1]:
+for i in list(range(4))[::-1]:
     print(i + 1)
     time.sleep(1)
 print("START COLLET DATA")
+collect_data = False
 
+def processImage(image):
+    image = image[round(image.shape[0] / 3):, :]
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = cv2.resize(image, (WIDTH, HEIGHT))
+    return image
 try:
     while True:
         message_getState = bytes("0", "utf-8")
@@ -57,17 +63,14 @@ try:
         s.sendall(message)
         data = s.recv(100000)
         image = cv2.imdecode(np.frombuffer(data, np.uint8), -1)
-        image = image[round(image.shape[0] / 3):, :]
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
+        image = processImage(image)
         # bỏ comment phần này để xem hình ảnh mà xe thấy
         # cv2.imshow('window', image)
         # if cv2.waitKey(25) & 0xFF == ord('q'):
         #     cv2.destroyAllWindows()
         #     break
-        image = cv2.resize(image, (WIDTH, HEIGHT))
-
-        training_data.append([image, round(float(current_angle))])
+        if collect_data:
+            training_data.append([image, round(float(current_angle))])
         if len(training_data) % 100 == 0:
             print(len(training_data))
             if len(training_data) >= SAVE_CHECKPOINT:
@@ -91,6 +94,9 @@ try:
         #     sendBack_Speed -= 5
         if keyboard.is_pressed('q'):
             break
+        if keyboard.is_pressed('p'):
+            collect_data = not collect_data
+            print("CONTINUE" if collect_data else "STOP")
         if abs(sendBack_angle) > MAX_ANGLE:
             sendBack_angle = MAX_ANGLE if sendBack_angle > 0 else -MAX_ANGLE
         if abs(sendBack_Speed) > 150:

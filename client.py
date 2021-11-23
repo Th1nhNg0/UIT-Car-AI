@@ -13,7 +13,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 port = 54321
 
 # connect to the server on local computer
-s.connect(('127.0.0.1', port))
+s.connect(('host.docker.internal', PORT))
 
 WIDTH = 160
 HEIGHT = 60
