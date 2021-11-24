@@ -4,6 +4,7 @@ map/
 log/
 .idea/
 __pycache__/
-
+Scripts/
+Lib/
 checkpoint
 model_*
